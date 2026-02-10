@@ -50,7 +50,7 @@ lib$(target).so $(soname) lib$(target).so.$(semver): $(target)
 (%): % ;
 %.a:
 	rm -f $@
-	$(AR) $(ARFLAGS) $@ $?
+	$(AR) $(ARFLAGS) $@ $^
 lib$(target).a: lib$(target).a($(patsubst %$(ext),%.o,$(wildcard *$(ext))))
 .SECONDARY: $(patsubst %$(ext),%.o,$(wildcard *$(ext)))
 
