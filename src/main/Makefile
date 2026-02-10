@@ -1,6 +1,6 @@
 # sub-makefile
 # build dynamic library with -fPIC -shared
-# fully static link archive with -static
+# fully static link with archive -static
 CFLAGS   = -Wall -Wextra # -g -O3 -std=c11 -fPIC
 CXXFLAGS = -Wall -Wextra # -g -O3 -std=c++11 -fPIC
 CPPFLAGS = -MMD -MP -I../foo # -DNDEBUG
