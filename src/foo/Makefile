@@ -6,7 +6,7 @@ CXXFLAGS = -Wall -Wextra -fPIC # -g -O3 -std=c++11
 CPPFLAGS = -MMD -MP # -I../foo -DNDEBUG
 LDFLAGS  = -shared # -L../foo -static
 LDLIBS   = # -lfoo
-ARFLAGS  = rv
+ARFLAGS  = rsD
 
 # make BUILD_TYPE=SANITIZE
 BUILD_TYPE ?= RELEASE
