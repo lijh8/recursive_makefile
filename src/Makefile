@@ -23,7 +23,7 @@ $(installdirs): ; mkdir -p $@
 
 # make DESTDIR=~/myapp prefix=/usr/local install
 install: all | $(installdirs)
-	cp main/main $(bindir)/
-	cp -P foo/lib*.so* $(libdir)/
-	cp foo/lib*.a $(libdir)/
-	cp foo/foo.h $(includedir)/
+	cp main/main $(bindir)
+	cp -P foo/lib*.so* $(libdir)
+	cp foo/lib*.a $(libdir)
+	cp foo/foo.h $(includedir)
