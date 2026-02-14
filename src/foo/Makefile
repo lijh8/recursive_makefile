@@ -26,7 +26,7 @@ $(error Unknown BUILD_TYPE: $(BUILD_TYPE). Use SANITIZE, DEBUG, or RELEASE)
 endif
 
 ext = .c
-ifneq ($(wildcard *.cpp),)
+ifeq ($(wildcard *$(ext)),)
 ext = .cpp
 CC  = $(CXX)
 endif

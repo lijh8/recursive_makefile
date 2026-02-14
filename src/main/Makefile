@@ -34,12 +34,12 @@ $(error Unknown LINK_TYPE: $(LINK_TYPE). Use DYNAMIC or STATIC)
 endif
 
 ext = .c
-ifneq ($(wildcard *.cpp),)
+ifeq ($(wildcard *$(ext)),)
 ext = .cpp
 CC  = $(CXX)
 endif
 
-target  = main
+target = main
 all: $(target)
 
 # target name is basename of one of the source files
