@@ -1,0 +1,62 @@
+one minor issue:
+
+it tries to build main every time, even if both main and foo source files are up to date.
+
+$ make
+make[1]: Entering directory '/home/ljh/Documents/hello_cpp/src/foo'
+g++ -g -fPIC -std=c++23 -fmodules -MMD -MP -c -o foo.o foo.cppm
+g++ -g -fPIC -std=c++23 -fmodules -MMD -MP -c -o bar.o bar.cpp
+g++ -shared foo.o bar.o -o foo
+cp foo libfoo.so
+make[1]: Leaving directory '/home/ljh/Documents/hello_cpp/src/foo'
+make[1]: Entering directory '/home/ljh/Documents/hello_cpp/src/main'
+g++ -g -std=c++23 -fmodules '-fmodule-mapper=|@g++-mapper-server -r../foo/gcm.cache' -MMD -MP -I../foo -c -o main.o main.cpp
+g++ -L../foo main.o -lfoo -o main
+make[1]: Leaving directory '/home/ljh/Documents/hello_cpp/src/main'
+$
+$ make
+make[1]: Entering directory '/home/ljh/Documents/hello_cpp/src/foo'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/ljh/Documents/hello_cpp/src/foo'
+make[1]: Entering directory '/home/ljh/Documents/hello_cpp/src/main'
+g++ -g -std=c++23 -fmodules '-fmodule-mapper=|@g++-mapper-server -r../foo/gcm.cache' -MMD -MP -I../foo -c -o main.o main.cpp
+g++ -L../foo main.o -lfoo -o main
+make[1]: Leaving directory '/home/ljh/Documents/hello_cpp/src/main'
+$
+$ LD_LIBRARY_PATH=foo ./main/main
+foo
+bar
+main
+bar
+$
+$ LD_LIBRARY_PATH=foo ldd ./main/main
+linux-vdso.so.1 (0x00007329f7ea0000)
+libfoo.so => foo/libfoo.so (0x00007329f7e8e000)
+libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007329f7a00000)
+libc.so.6 => /usr/lib/x86_64-linux-gnu/libc.so.6 (0x00007329f7600000)
+libm.so.6 => /usr/lib/x86_64-linux-gnu/libm.so.6 (0x00007329f7d58000)
+/lib64/ld-linux-x86-64.so.2 (0x00007329f7ea2000)
+libgcc_s.so.1 => /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007329f7d2a000)
+$
+$
+$ g++ --version
+g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+Copyright (C) 2025 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions. There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+$ make --version
+GNU Make 4.4.1
+Built for x86_64-pc-linux-gnu
+Copyright (C) 1988-2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+$
+$ cat /etc/lsb-release
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=26.04
+DISTRIB_CODENAME=resolute
+DISTRIB_DESCRIPTION="Ubuntu 26.04 LTS"
+$
+$
