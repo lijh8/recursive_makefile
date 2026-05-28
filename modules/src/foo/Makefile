@@ -17,5 +17,7 @@ CPPFLAGS += -Mno-modules
 %.o :%.cppm ; $(COMPILE.cpp) $(OUTPUT_OPTION) $<
 
 libfoo.so: foo; cp foo libfoo.so
-foo_impl.o: foo.o
-bar_impl.o: bar.o
+
+foo_impl.o: foo.o # build its own interface first, foo.gcm is created alongside foo.o;
+bar_impl.o: bar.o # build its own interface first, bar.gcm is created alongside bar.o;
+foo.o: bar.o      # foo imports bar, so bar.gcm should be created first;
