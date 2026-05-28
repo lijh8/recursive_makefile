@@ -14,7 +14,7 @@ clean: ; rm -fr *.o *.d foo libfoo.so gcm.cache
 .PHONY: clean
 
 CPPFLAGS += -Mno-modules
-%.o :%.cppm ; $(COMPILE.cpp) $(OUTPUT_OPTION) $<
+%.o: %.cppm; $(COMPILE.cpp) $(OUTPUT_OPTION) $<
 
 libfoo.so: foo; cp foo libfoo.so
 
