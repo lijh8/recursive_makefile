@@ -25,34 +25,30 @@ else
 $(error Unknown BUILD_TYPE: $(BUILD_TYPE). Use SANITIZE, DEBUG, or RELEASE)
 endif
 
-ext = .c
-ifeq ($(wildcard *$(ext)),)
-ext = .cpp
-CC  = $(CXX)
+ifneq ($(wildcard *.cpp),)
+CC       = $(CXX) # link with CXX for .cpp
 endif
 
-target  = foo
-semver  = 1.2.3
-soname  = lib$(target).so.$(firstword $(subst ., ,$(semver)))
-LDFLAGS += -Wl,-soname,$(soname)
-
-all: $(target) lib$(target).so $(soname) lib$(target).so.$(semver) lib$(target).a
-
-# target name is basename of one of the source files
-$(target): $(patsubst %$(ext),%.o,$(wildcard *$(ext)))
+target   = foo
+semver   = 1.2.3
+soname   = lib$(target).so.$(firstword $(subst ., ,$(semver)))
+LDFLAGS  += -Wl,-soname,$(soname)
 
 lib$(target).so $(soname) lib$(target).so.$(semver): $(target)
 	cp $(target) lib$(target).so.$(semver)
 	ln -fs lib$(target).so.$(semver) $(soname)
 	ln -fs $(soname) lib$(target).so
 
+# target name is basename of one of the source files
+$(target): $(addsuffix .o,$(basename $(wildcard *.c *.cpp)))
+
 # archive
 (%): % ;
 %.a:
-	rm -f $@
+	rm -f $@ # re-create archive in case object files removed or added
 	$(AR) $(ARFLAGS) $@ $^
-lib$(target).a: lib$(target).a($(patsubst %$(ext),%.o,$(wildcard *$(ext))))
-.SECONDARY: $(patsubst %$(ext),%.o,$(wildcard *$(ext)))
+lib$(target).a: lib$(target).a($(addsuffix .o,$(basename $(wildcard *.c *.cpp))))
+.SECONDARY: $(addsuffix .o,$(basename $(wildcard *.c *.cpp)))
 
 -include *.d
 clean: ; rm -f *.o *.d $(target) lib*.so* lib*.a

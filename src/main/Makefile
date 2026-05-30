@@ -28,22 +28,19 @@ endif
 # make LINK_TYPE=DYNAMIC
 LINK_TYPE ?= DYNAMIC
 ifeq ($(LINK_TYPE),STATIC)
-LDFLAGS += -static
+LDFLAGS   += -static
 else ifneq ($(LINK_TYPE),DYNAMIC)
 $(error Unknown LINK_TYPE: $(LINK_TYPE). Use DYNAMIC or STATIC)
 endif
 
-ext = .c
-ifeq ($(wildcard *$(ext)),)
-ext = .cpp
-CC  = $(CXX)
+ifneq ($(wildcard *.cpp),)
+CC        = $(CXX) # link with CXX for .cpp
 endif
 
-target = main
-all: $(target)
+target    = main
 
 # target name is basename of one of the source files
-$(target): $(patsubst %$(ext),%.o,$(wildcard *$(ext)))
+$(target): $(addsuffix .o,$(basename $(wildcard *.c *.cpp)))
 
 -include *.d
 clean: ; rm -f *.o *.d $(target)
