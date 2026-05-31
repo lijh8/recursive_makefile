@@ -6,6 +6,11 @@ CXXFLAGS = -Wall -Wextra # -g -O3 -std=c++11 -fPIC
 CPPFLAGS = -MMD -MP -I../foo # -DNDEBUG
 LDFLAGS  = -L../foo # -static -shared
 LDLIBS   = -lfoo
+
+ifneq ($(wildcard *.cpp),)
+CC       = $(CXX) # link with CXX for .cpp
+endif
+
 LDFLAGS  += -Wl,-rpath,'$$ORIGIN/../foo:$$ORIGIN/../lib'
 
 # make BUILD_TYPE=SANITIZE
@@ -28,16 +33,12 @@ endif
 # make LINK_TYPE=DYNAMIC
 LINK_TYPE ?= DYNAMIC
 ifeq ($(LINK_TYPE),STATIC)
-LDFLAGS   += -static
+LDFLAGS  += -static
 else ifneq ($(LINK_TYPE),DYNAMIC)
 $(error Unknown LINK_TYPE: $(LINK_TYPE). Use DYNAMIC or STATIC)
 endif
 
-ifneq ($(wildcard *.cpp),)
-CC        = $(CXX) # link with CXX for .cpp
-endif
-
-target    = main
+target   = main
 
 # target name is basename of one of the source files
 $(target): $(addsuffix .o,$(basename $(wildcard *.c *.cpp)))

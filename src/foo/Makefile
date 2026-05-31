@@ -8,6 +8,12 @@ LDFLAGS  = -shared # -L../foo -static
 LDLIBS   = # -lfoo
 ARFLAGS  = rsD
 
+ifneq ($(wildcard *.cpp),)
+CC       = $(CXX) # link with CXX for .cpp
+endif
+
+LDFLAGS  += -Wl,-soname,$(soname)
+
 # make BUILD_TYPE=SANITIZE
 BUILD_TYPE ?= RELEASE
 ifeq ($(BUILD_TYPE),SANITIZE)
@@ -25,14 +31,9 @@ else
 $(error Unknown BUILD_TYPE: $(BUILD_TYPE). Use SANITIZE, DEBUG, or RELEASE)
 endif
 
-ifneq ($(wildcard *.cpp),)
-CC       = $(CXX) # link with CXX for .cpp
-endif
-
 target   = foo
 semver   = 1.2.3
 soname   = lib$(target).so.$(firstword $(subst ., ,$(semver)))
-LDFLAGS  += -Wl,-soname,$(soname)
 
 all: lib$(target).so $(soname) lib$(target).so.$(semver) lib$(target).a
 
@@ -47,7 +48,7 @@ $(target): $(addsuffix .o,$(basename $(wildcard *.c *.cpp)))
 # archive
 (%): % ;
 %.a:
-	rm -f $@ # remove and re-create archive in case object files removed or added
+	rm -f $@ # remove for clean build
 	$(AR) $(ARFLAGS) $@ $^
 lib$(target).a: lib$(target).a($(addsuffix .o,$(basename $(wildcard *.c *.cpp))))
 .SECONDARY: $(addsuffix .o,$(basename $(wildcard *.c *.cpp)))
