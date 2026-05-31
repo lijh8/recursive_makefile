@@ -44,4 +44,4 @@ $(target): $(addsuffix .o,$(basename $(wildcard *.c *.cpp)))
 
 -include *.d
 clean: ; rm -f *.o *.d $(target)
-.PHONY: all clean
+.PHONY: clean

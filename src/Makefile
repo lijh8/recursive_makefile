@@ -3,7 +3,7 @@ MAKEFLAGS += --no-print-directory
 
 subdirs = main foo
 main: foo
-.PHONY: all clean install $(subdirs)
+.PHONY: clean install $(subdirs)
 $(subdirs): ; @$(MAKE) -C $@
 
 clean:
@@ -19,7 +19,7 @@ installdirs = $(bindir) $(libdir) $(includedir)
 $(installdirs): ; mkdir -p $@
 
 # make DESTDIR=~/myapp prefix=/usr/local install
-install: all | $(installdirs)
+install: $(subdirs) | $(installdirs)
 	cp main/main $(bindir)
 	cp -P foo/lib*.so* $(libdir)
 	cp foo/lib*.a $(libdir)
