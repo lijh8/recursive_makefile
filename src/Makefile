@@ -10,7 +10,6 @@ clean:
 	@for dir in $(subdirs); do \
 		$(MAKE) -C $$dir $@; \
 	done
-.PHONY: all clean install $(subdirs)
 
 prefix ?= /usr/local
 bindir = $(DESTDIR)$(prefix)/bin
@@ -25,3 +24,5 @@ install: $(subdirs) | $(installdirs)
 	cp -P foo/lib*.so* $(libdir)
 	cp foo/lib*.a $(libdir)
 	cp foo/foo.h $(includedir)
+
+.PHONY: all clean install $(subdirs)

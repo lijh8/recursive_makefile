@@ -54,4 +54,4 @@ lib$(target).a: lib$(target).a($(addsuffix .o,$(basename $(wildcard *.c *.cpp)))
 
 -include *.d
 clean: ; rm -f *.o *.d $(target) lib*.so* lib*.a
-.PHONY: clean
+.PHONY: all clean
