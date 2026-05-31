@@ -2,14 +2,15 @@
 MAKEFLAGS += --no-print-directory
 
 subdirs = main foo
+all: $(subdirs)
 main: foo
-.PHONY: clean install $(subdirs)
 $(subdirs): ; @$(MAKE) -C $@
 
 clean:
 	@for dir in $(subdirs); do \
 		$(MAKE) -C $$dir $@; \
 	done
+.PHONY: all clean install $(subdirs)
 
 prefix ?= /usr/local
 bindir = $(DESTDIR)$(prefix)/bin
